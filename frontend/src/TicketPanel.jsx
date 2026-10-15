@@ -11,6 +11,8 @@ export default function TicketPanel({ employee, selectedId, sources, onChanged }
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    let isCurrent = true; // Флаг актуальности этого запроса
+
     if (!selectedId) {
       setTicket(null);
       return;
@@ -19,10 +21,18 @@ export default function TicketPanel({ employee, selectedId, sources, onChanged }
     setError('');
     setMessage('');
     api(`/tickets/${selectedId}`).then(data => {
-      setTicket(data.ticket);
-      setHistory(data.history);
-      setSourceId(String(data.ticket.source?.id ?? ''));
+      // Обновляем стейт, ТОЛЬКО если пользователь не кликнул на следующий тикет
+      if (isCurrent) {
+        setTicket(data.ticket);
+        setHistory(data.history);
+        setSourceId(String(data.ticket.source?.id ?? ''));
+      }
     }).catch(error => setError(error.message)).finally(() => setLoading(false));
+
+    // Функция очистки: выполнится автоматически, как только selectedId изменится
+    return () => {
+      isCurrent = false;
+    };
   }, [selectedId]);
 
   async function save() {
