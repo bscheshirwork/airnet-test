@@ -49,6 +49,7 @@ if (preg_match('~^/api/tickets/([1-9][0-9]*)$~', $path, $matches) && $method ===
 }
 if (preg_match('~^/api/tickets/([1-9][0-9]*)/source$~', $path, $matches) && $method === 'POST') {
     requireCsrf();
+    requirePermission($employee, 'FUNC_TICKETS_SOURCE_EDIT');
     $body = requestBody();
     $sourceId = isset($body['source_id']) ? $body['source_id'] : null;
     if (!is_int($sourceId) || $sourceId <= 0) {
