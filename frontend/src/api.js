@@ -5,7 +5,9 @@ export function setCsrf(value) {
 }
 
 export async function api(path, options = {}) {
-  const response = await fetch(`/api${path}`, {
+  const urlWithDebug = `/api${path}${path.includes('?') ? '&' : '?'}XDEBUG_SESSION=REACT_DEBUG`;
+
+  const response = await fetch(urlWithDebug, {
     credentials: 'same-origin',
     ...options,
     headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf, ...options.headers },

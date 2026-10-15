@@ -12,14 +12,13 @@ WORKDIR /app
 ENV PHP_CLI_SERVER_WORKERS=4
 ENV PHP_IDE_CONFIG="serverName=airnet-assessment"
 
-# Команда запуска с жестко встроенными параметрами конфигурации Xdebug 3.1.6
 CMD php \
     -d display_errors=0 \
     -d xdebug.mode=debug \
-    -d xdebug.start_with_request=yes \
+    -d xdebug.start_with_request=trigger \
+    -d xdebug.trigger_value=REACT_DEBUG \
     -d xdebug.client_host=host.docker.internal \
     -d xdebug.client_port=9003 \
-    -d xdebug.log=/app/xdebug.log \
     -S 0.0.0.0:8080 \
     -t public \
     public/router.php
