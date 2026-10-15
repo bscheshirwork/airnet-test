@@ -22,7 +22,7 @@ class TicketRepository
             'title' => $row['title'],
             'description' => $row['description'],
             'status' => $row['status'],
-            'source' => array('id' => (int) $source['id'], 'name' => $source['name']),
+            'source' => $source ? array('id' => (int) $source['id'], 'name' => $source['name']) : null,
             'updated_at' => $row['updated_at'],
         );
     }
