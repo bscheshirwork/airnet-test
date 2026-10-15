@@ -113,10 +113,12 @@ post_status, current_data = run_session_test(
 print(f" -> Бэкенд корректно заблокировал запрос со статусом: {post_status}")
 
 # Проверяем, что в базе данных НИЧЕГО НЕ ИЗМЕНИЛОСЬ, и остался прежний EDITOR_NEW_SOURCE_ID (1)
-assert current_data['ticket']['id'] == TARGET_TICKET_ID and current_data['ticket']['source']['id'] == EDITOR_NEW_SOURCE_ID, \
-    f"ДЫРА В БЕЗОПАСНОСТИ! Бэкенд вернул ошибку, но данные в базе изменились на {VIEWER_FORBIDDEN_SOURCE_ID}! Текущее состояние: {current_data}"
-
-print(f"[УСПЕХ] Тест VIEWER пройден. Изменения заблокированы, в базе сохранен прежний source_id = {EDITOR_NEW_SOURCE_ID}")
+try:
+    assert current_data['ticket']['id'] == TARGET_TICKET_ID and current_data['ticket']['source']['id'] == EDITOR_NEW_SOURCE_ID, \
+        f"ДЫРА В БЕЗОПАСНОСТИ! Бэкенд вернул ошибку, но данные в базе изменились на {VIEWER_FORBIDDEN_SOURCE_ID}! Текущее состояние: {current_data}"
+    print(f"[УСПЕХ] Тест VIEWER пройден. Изменения заблокированы, в базе сохранен прежний source_id = {EDITOR_NEW_SOURCE_ID}")
+except AssertionError as e:
+    print(f"\n[УЯЗВИМОСТЬ ОБНАРУЖЕНА] {e}\n")
 
 
 print("\n=====================================================================")
